@@ -9,5 +9,5 @@ public class RestfulServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestfulServiceApplication.class, args);
 	}
-
+	
 }
