@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path="/api/v1/customer")
+@RequestMapping(path="${apiPrefix}/customer")
 public class CustomerController {
 	
 	@GetMapping
