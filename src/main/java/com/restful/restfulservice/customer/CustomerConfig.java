@@ -1,7 +1,8 @@
 package com.restful.restfulservice.customer;
 
+import java.time.Month;
+import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,16 +21,14 @@ public class CustomerConfig {
 			Customer teymur = new Customer("Teymur",
 					"Azimzada",
 					"teymur_azimzada@yahoo.com",
-					24);
+					LocalDate.of(1999, Month.APRIL, 14));
 			
 			Customer asad = new Customer("Asad",
 					"Zeynalov",
 					"asad_zeynal@yahoo.com",
-					26);
+					LocalDate.of(1997, Month.SEPTEMBER, 20));
 			
 			customerRepository.saveAll(List.of(teymur,asad));
-			
 		};
 	}
-
 }
