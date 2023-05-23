@@ -1,4 +1,4 @@
-package com.restful.restfulservice.customer;
+package com.restful.restfulservice.resident;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -16,14 +16,14 @@ import lombok.Data;
 @AllArgsConstructor
 @Entity
 @Table
-public class  Customer {
+public class  ResidentEntity {
 	
 	@Id
-	@SequenceGenerator(name = "customer_sequence",
-						sequenceName = "customer_sequence",
+	@SequenceGenerator(name = "resident_sequence",
+						sequenceName = "resident_sequence",
 						allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-					generator = "customer_sequence")
+					generator = "resident_sequence")
 	private Long id; 
 	private String firstName;
 	private String lastName;
@@ -33,10 +33,10 @@ public class  Customer {
 	private Integer age;
 	private LocalDate dateOfBirth;
 	
-	public Customer() {
+	public ResidentEntity() {
 	}
 	
-	public Customer(String firstName, String lastName, String email, LocalDate dateOfBirth) {
+	public ResidentEntity(String firstName, String lastName, String email, LocalDate dateOfBirth) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

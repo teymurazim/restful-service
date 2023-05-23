@@ -1,4 +1,4 @@
-package com.restful.restfulservice.customer;
+package com.restful.restfulservice.resident;
 
 import java.time.Month;
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CustomerConfig {
+public class ResidentConfig {
 	
 	/*
 	 * Remove ID since it is generated now by DB
@@ -16,19 +16,19 @@ public class CustomerConfig {
 	 */
 	
 	@Bean
-	CommandLineRunner commandLineRunner(CustomerRepository customerRepository) {
+	CommandLineRunner commandLineRunner(ResidentRepository residentRepository) {
 		return args -> {
-			Customer teymur = new Customer("Teymur",
+			ResidentEntity teymur = new ResidentEntity("Teymur",
 					"Azimzada",
 					"teymur_azimzada@yahoo.com",
 					LocalDate.of(1999, Month.APRIL, 14));
 			
-			Customer asad = new Customer("Asad",
+			ResidentEntity asad = new ResidentEntity("Asad",
 					"Zeynalov",
 					"asad_zeynal@yahoo.com",
 					LocalDate.of(1997, Month.SEPTEMBER, 20));
 			
-			customerRepository.saveAll(List.of(teymur,asad));
+			residentRepository.saveAll(List.of(teymur,asad));
 		};
 	}
 }
