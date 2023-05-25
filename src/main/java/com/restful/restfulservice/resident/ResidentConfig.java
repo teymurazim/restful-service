@@ -18,12 +18,12 @@ public class ResidentConfig {
 	@Bean
 	CommandLineRunner commandLineRunner(ResidentRepository residentRepository) {
 		return args -> {
-			ResidentEntity teymur = new ResidentEntity("Teymur",
+			Resident teymur = new Resident("Teymur",
 					"Azimzada",
 					"teymur_azimzada@yahoo.com",
 					LocalDate.of(1999, Month.APRIL, 14));
 			
-			ResidentEntity asad = new ResidentEntity("Asad",
+			Resident asad = new Resident("Asad",
 					"Zeynalov",
 					"asad_zeynal@yahoo.com",
 					LocalDate.of(1997, Month.SEPTEMBER, 20));

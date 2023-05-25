@@ -2,6 +2,9 @@ package com.restful.restfulservice.resident;
 
 import java.time.LocalDate;
 import java.time.Period;
+
+import com.restful.restfulservice.type.EntityObject;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,14 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 @Entity
 @Table
-public class  ResidentEntity {
+public class Resident implements EntityObject{
 	
 	@Id
 	@SequenceGenerator(name = "resident_sequence",
@@ -33,10 +34,10 @@ public class  ResidentEntity {
 	private Integer age;
 	private LocalDate dateOfBirth;
 	
-	public ResidentEntity() {
+	public Resident() {
 	}
 	
-	public ResidentEntity(String firstName, String lastName, String email, LocalDate dateOfBirth) {
+	public Resident(String firstName, String lastName, String email, LocalDate dateOfBirth) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

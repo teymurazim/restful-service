@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ResidentRepository extends JpaRepository<ResidentEntity, Long>{
+public interface ResidentRepository extends JpaRepository<Resident, Long>{
 	
 	
 	/*
@@ -16,6 +16,5 @@ public interface ResidentRepository extends JpaRepository<ResidentEntity, Long>{
 	 * in the CrudRepository without @Query annotation
 	 * 
 	 */
-	@Query(value = "SELECT r FROM resident r WHERE r.email = ?1", nativeQuery = true)
-	Optional<ResidentEntity> findResidentByEmail(String email);
+	Optional<Resident> findResidentByEmail(String email);
 }

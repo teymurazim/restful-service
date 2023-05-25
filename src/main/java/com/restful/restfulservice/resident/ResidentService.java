@@ -5,7 +5,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.restful.restfulservice.resident.factory.ResidentRecordFactory;
+import com.restful.restfulservice.resident.factory.ResidentEntityFactory;
+import com.restful.restfulservice.response.ResponseHandler;
 
 import jakarta.transaction.Transactional;
 
@@ -17,70 +23,87 @@ import jakarta.transaction.Transactional;
 public class ResidentService {
 
 	private final ResidentRepository residentRepository;
+	private final ResponseHandler responseHandler;
+	private final ResidentEntityFactory ref;
+	private final ResidentRecordFactory rrf;
 	
 	@Autowired
-	public ResidentService(ResidentRepository residentRepository) {
+	public ResidentService(ResidentRepository residentRepository, ResidentEntityFactory ref, ResidentRecordFactory rrf, ResponseHandler responseHandler) {
 		this.residentRepository = residentRepository;
+		this.responseHandler = responseHandler;
+		this.ref = ref;
+		this.rrf = rrf;
 	}
-
-	public List<ResidentEntity> getResidents() {
-		return residentRepository.findAll();
+	
+	public ResponseEntity<Object> getResidents() {
+	
+		return responseHandler.generateResponse(HttpStatus.OK, getResidentsFromRepo());
 	}
-
-	public void addNewResident(ResidentEntity residentEntity) throws EmailAlreadyExistsException {
-		Optional<ResidentEntity> checkResident = residentRepository.findResidentByEmail(residentEntity.getEmail());
+	
+	public List<ResidentRecord> getResidentsFromRepo() {
+		List<Resident> residents = residentRepository.findAll();
+		return rrf.buildRecordList(residents); 
+	}
+	
+	public ResponseEntity<Object> getResidentById(Long id) {
+		Optional<Resident> resident = residentRepository.findById(id);
 		
-		if (checkResident.isPresent()) {
-			throw new EmailAlreadyExistsException("Resident with the given email already exists!");
+		if(!resident.isPresent())
+			return responseHandler.generateResponse(HttpStatus.NOT_FOUND, null);
+		
+		return responseHandler.generateResponse(HttpStatus.OK, rrf.buildRecord(resident.get()));
+	}
+
+	public ResponseEntity<Object> registerNewResident(ResidentRecord residentRecord){
+		
+		Optional<Resident> resident = residentRepository.findResidentByEmail(residentRecord.email());
+		
+		if (resident.isPresent()) {
+			return responseHandler.generateResponse(HttpStatus.CONFLICT, "A resident with provided email already exists"); 
 		}
 		
-		residentRepository.saveAndFlush(residentEntity);
+		residentRepository.saveAndFlush(ref.buildEntity(residentRecord));
+		
+		return responseHandler.generateResponse(HttpStatus.CREATED, getResidentsFromRepo());
 	}
+	
 	
 	@Transactional
-	public void updateResident(Long residentId, String firstName, String lastName, String email) {
+	public ResponseEntity<Object> updateResident(Long residentId, String firstName, String lastName, String email) {
 		
-		ResidentEntity residentEntity = residentRepository.findById(residentId)
-							.orElseThrow(() -> new IllegalStateException("Resident with id:" + residentId + " does not exist."));
+		Optional<Resident> resident = residentRepository.findById(residentId);
+		
+		if (!resident.isPresent()) 
+			return responseHandler.generateResponse(HttpStatus.NOT_FOUND, null);
 		
 		
-		if (firstName != null && firstName.length() > 0 && !Objects.equals(residentEntity.getFirstName(), firstName)) {
-			residentEntity.setFirstName(firstName);
+		if (firstName != null && firstName.length() > 0 && !Objects.equals(resident.get().getFirstName(), firstName)) {
+			resident.get().setFirstName(firstName);
 		}
 		
-		if (lastName != null && lastName.length() > 0 && !Objects.equals(residentEntity.getLastName(), lastName)) {
-			residentEntity.setLastName(lastName);
+		if (lastName != null && lastName.length() > 0 && !Objects.equals(resident.get().getLastName(), lastName)) {
+			resident.get().setLastName(lastName);
 		}
 		
-		if (email != null && email.length() > 0 && !Objects.equals(residentEntity.getEmail(), email)) {
+		if (email != null && email.length() > 0 && !Objects.equals(resident.get().getEmail(), email)) {
 			
-			Optional<ResidentEntity> checkResident = residentRepository.findResidentByEmail(email);
+			Optional<Resident> checkResident = residentRepository.findResidentByEmail(email);
 			if(checkResident.isPresent())
-				throw new IllegalStateException("This email is taken");
+				return responseHandler.generateResponse(HttpStatus.CONFLICT, "A resident with provided email already exists");
 				
-			residentEntity.setEmail(email);
+			resident.get().setEmail(email);
 		}
+		
+		return responseHandler.generateResponse(HttpStatus.OK, rrf.buildRecord(resident.get()));
 		
 	}
 	
-	
-	public void deleteResident(Long residentId) {
+	public ResponseEntity<Object> deleteResident(Long residentId) {
 		if(!residentRepository.existsById(residentId)) {
-			throw new IllegalStateException("resident with id" + residentId + "doesnot exist");
+			return responseHandler.generateResponse(HttpStatus.NOT_FOUND, "A resident with provided ID does not exists");
 		}
 		
 		residentRepository.deleteById(residentId);
-	}
-	
-	
-	
-	@SuppressWarnings("serial")
-	class EmailAlreadyExistsException extends Exception {
-		
-		//private static final long serialVersionUID = 1L;  No longer needed usually now
-
-		EmailAlreadyExistsException(String message) {
-			super(message);
-		}
+		return responseHandler.generateResponse(HttpStatus.OK, "The resident has been deleted");
 	}
 }
