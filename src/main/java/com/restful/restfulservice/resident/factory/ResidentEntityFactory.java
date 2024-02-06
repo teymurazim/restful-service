@@ -3,9 +3,8 @@ package com.restful.restfulservice.resident.factory;
 import org.springframework.stereotype.Component;
 
 import com.restful.restfulservice.factory.AbstractEntityFactory;
-import com.restful.restfulservice.resident.ResidentDTO;
-import com.restful.restfulservice.resident.Resident;
-import com.restful.restfulservice.resident.ResidentRecord;
+import com.restful.restfulservice.resident.model.Resident;
+import com.restful.restfulservice.resident.model.ResidentRecord;
 
 @Component
 public class ResidentEntityFactory extends AbstractEntityFactory<ResidentRecord, Resident> {

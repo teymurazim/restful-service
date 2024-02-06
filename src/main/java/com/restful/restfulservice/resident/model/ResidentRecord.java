@@ -1,10 +1,10 @@
-package com.restful.restfulservice.resident;
+package com.restful.restfulservice.resident.model;
 
 import java.time.LocalDate;
 
 import com.restful.restfulservice.type.RecordObject;
 
-public record ResidentRecord(String firstName, String lastName, String email, LocalDate dateOfBirth, Integer age) implements RecordObject {
+public record ResidentRecord(Long id, String firstName, String lastName, String email, LocalDate dateOfBirth, Integer age) implements RecordObject {
 	
 	/* ResidentRecord can be an interface. Can create several types of records (with or without password for example and etc.)
 	

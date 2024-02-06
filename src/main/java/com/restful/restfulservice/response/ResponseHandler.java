@@ -1,17 +1,14 @@
 package com.restful.restfulservice.response;
 
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import lombok.NoArgsConstructor;
+
 @Component
+@NoArgsConstructor
 public class ResponseHandler {
-	
-	public ResponseHandler() {
-		
-	}
 
 	public ResponseEntity<Object> generateResponse(HttpStatus statusCode, Object responseObject) {
 		
